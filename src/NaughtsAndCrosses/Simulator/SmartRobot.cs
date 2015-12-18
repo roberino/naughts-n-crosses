@@ -6,12 +6,13 @@ namespace NaughtsAndCrosses.Simulator
     public class SmartRobot : Robot
     {
         private readonly GameStats brain;
-
         private Trainer trainer;
 
         public SmartRobot(int id, GameStats brain = null) : base(id, "Adaptive robot")
         {
             this.brain = brain ?? new GameStats(this);
+
+            if (!this.brain.IsOwner(this)) throw new InvalidOperationException();
         }
 
         public bool AutoSave { get; set; }
@@ -19,6 +20,8 @@ namespace NaughtsAndCrosses.Simulator
         public override void Join(Game game)
         {
             base.Join(game);
+
+            game.Board.Completed += BoardCompleted;
 
             trainer = new Trainer(game);
         }
@@ -30,7 +33,7 @@ namespace NaughtsAndCrosses.Simulator
 
         public void Save()
         {
-            brain.Save();   
+            brain.Save();
         }
 
         public void Load()
@@ -79,20 +82,20 @@ namespace NaughtsAndCrosses.Simulator
             if (!scoreAggr.ScoreValue.HasValue)
             {
                 var refs = game.Board.AvailableReferences.ToList();
-                scoreAggr.Update(0, refs[rnd.Next(refs.Count)]);
+                scoreAggr.Update(0, rand.Select(refs));
             }
 
             game.Board.SubmitGo(this, scoreAggr.Reference);
+        }
 
-            if (game.Board.IsComplete)
+        private void BoardCompleted(object sender, EventArgs e)
+        {
+            brain.Register(game);
+
+            if (AutoSave)
             {
-                brain.Register(game);
-
-                if (AutoSave)
-                {
-                    var sv = new Action(Save);
-                    sv.BeginInvoke(a => sv.EndInvoke(a), null);
-                }
+                var sv = new Action(Save);
+                sv.BeginInvoke(a => sv.EndInvoke(a), null);
             }
         }
 

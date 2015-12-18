@@ -19,7 +19,7 @@ namespace NaughtsAndCrosses.Simulator
 
         public GameStats Train(GameStats data, int iterations)
         {
-            var rand = new Random(DateTime.Now.Millisecond);
+            var rand = new RandomSelector();
 
             var player1 = game.Players.First();
             var player2 = game.Players.Skip(1).First();
@@ -32,12 +32,9 @@ namespace NaughtsAndCrosses.Simulator
                 {
                     var avail = game.Board.AvailableReferences.ToList();
 
-                    if (avail.Count == 0)
-                    {
-                        break;
-                    }
+                    var reference = rand.Select(avail, -1);
 
-                    var reference = avail[rand.Next(avail.Count)];
+                    if (reference == -1) break;
 
                     var player = isPlayer1 ? player1 : player2;
 

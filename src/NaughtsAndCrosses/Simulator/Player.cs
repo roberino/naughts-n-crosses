@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Windows.Media;
 
 namespace NaughtsAndCrosses.Simulator
 {
-    public class Player : NPC
+    public class Player : NPC, IEquatable<Player>
     {
         private static int counter;
         private readonly char[] symbols = new char[] { 'X', 'D', 'O', 'B' };
@@ -77,6 +78,25 @@ namespace NaughtsAndCrosses.Simulator
             }
 
             return Colors.Green;
+        }
+
+        public bool Equals(Player other)
+        {
+            if (other == null) return false;
+
+            if (ReferenceEquals(this, other)) return true;
+
+            return (Id == other.Id && GetType() == other.GetType());
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Player);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id;
         }
     }
 }

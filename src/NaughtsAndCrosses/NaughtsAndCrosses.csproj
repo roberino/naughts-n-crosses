@@ -73,6 +73,7 @@
     <Compile Include="Simulator\Point.cs" />
     <Compile Include="Simulator\Primes.cs" />
     <Compile Include="Simulator\RandomRobot .cs" />
+    <Compile Include="Simulator\RandomSelector.cs" />
     <Compile Include="Simulator\Robot.cs" />
     <Compile Include="Simulator\SmartRobot.cs" />
     <Compile Include="Simulator\Trainer.cs" />
@@ -108,6 +109,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="Data\game1.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

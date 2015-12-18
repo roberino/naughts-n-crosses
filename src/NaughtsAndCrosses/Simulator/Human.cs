@@ -15,7 +15,7 @@ namespace NaughtsAndCrosses.Simulator
         {
             get
             {
-                return "Sam";
+                return "O";
             }
         }
 

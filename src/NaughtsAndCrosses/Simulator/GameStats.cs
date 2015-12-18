@@ -8,23 +8,28 @@ namespace NaughtsAndCrosses.Simulator
 {
     public class GameStats
     {
-        private readonly List<GameState> gameData;
+        private readonly HashSet<GameState> gameData;
         private readonly Player player;
 
         int maxGameLength;
 
         public GameStats(Player player)
         {
-            gameData = new List<GameState>();
+            gameData = new HashSet<GameState>();
 
             this.player = player;
+        }
+
+        public bool IsOwner(Player player)
+        {
+            return this.player.Equals(player);
         }
 
         public void Save()
         {
             var persistance = new Persistence();
 
-            persistance.Save(gameData, player.Id);
+            persistance.Save(gameData.ToList(), player.Id);
         }
 
         public void Load()
@@ -33,7 +38,10 @@ namespace NaughtsAndCrosses.Simulator
 
             var data = persistance.Load<List<GameState>>(player.Id);
 
-            gameData.AddRange(data);
+            foreach (var d in data)
+            {
+                if (!gameData.Contains(d)) gameData.Add(d);
+            }
         }
 
         public void Register(Game game)
@@ -61,7 +69,7 @@ namespace NaughtsAndCrosses.Simulator
                 IsWin = isWin
             };
 
-            gameData.Add(s);
+            if (!gameData.Contains(s)) gameData.Add(s);
 
             if (state.Length > maxGameLength)
             {
@@ -75,11 +83,13 @@ namespace NaughtsAndCrosses.Simulator
             var sum = state.Select(x => (int)x).Sum();
             var s1 = new GameState() { State = state };
 
-            return gameData.Where(k => 
-                k.State.Length >= state.Length && 
-                k.State[state.Length - 1] == n && 
-                k.State.Take(state.Length).Select(x => (int)x).Sum() == sum &&
-                k.Key.StartsWith(s1.Key));
+            return gameData.Where(k => k.IsLike(state));
+
+            //return gameData.Where(k => 
+            //    k.State.Length >= state.Length && 
+            //    k.State[state.Length - 1] == n && 
+            //    k.State.Take(state.Length).Select(x => (int)x).Sum() == sum &&
+            //    k.Key.StartsWith(s1.Key));
         }
 
         public float? ScoreMove(byte[] state, bool wins = true)
@@ -93,7 +103,7 @@ namespace NaughtsAndCrosses.Simulator
         }
 
         [Serializable]
-        public class GameState
+        public class GameState : IEquatable<GameState>
         {
             public byte[] State { get; set; }
 
@@ -103,16 +113,47 @@ namespace NaughtsAndCrosses.Simulator
             {
                 get
                 {
-                    return State
-                        .Aggregate(
-                            new StringBuilder(),
-                                (s, n) => s.Append('/').Append(n)).ToString();
+                    return Aggr(State) + '=' + IsWin;
                 }
+            }
+
+            public bool IsLike(byte[] state)
+            {
+                return State.Length >= state.Length &&
+                    State[state.Length - 1] == state[state.Length - 1] &&
+                    Aggr(State.Take(state.Length - 1).ToArray()) == Aggr(state.Take(state.Length - 1).ToArray());
             }
 
             public override string ToString()
             {
-                return Key + '=' + IsWin;
+                return Key;
+            }
+
+            public override int GetHashCode()
+            {
+                return Key.GetHashCode();
+            }
+
+            private string Aggr(byte[] state)
+            {
+                return state == null ? string.Empty : state
+                        .Aggregate(
+                            new StringBuilder(),
+                                (s, n) => s.Append('/').Append(n)).ToString();
+            }
+
+            public bool Equals(GameState other)
+            {
+                if (other == null) return false;
+
+                if (ReferenceEquals(this, other)) return true;
+
+                return string.Equals(Key, other.Key);
+            }
+
+            public override bool Equals(object obj)
+            {
+                return Equals(obj as GameState);
             }
         }
     }

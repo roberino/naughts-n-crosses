@@ -38,6 +38,7 @@ namespace NaughtsAndCrosses.Simulator
 
         public event EventHandler<PlayerEventArgs<Point>> Updated;
         public event EventHandler BoardReset;
+        public event EventHandler Completed;
 
         public void SubmitGo(Player p, Point gridRef)
         {
@@ -70,11 +71,6 @@ namespace NaughtsAndCrosses.Simulator
             boardState[reference] = p.Id;
             boardSequence.Add(new Tuple<int, Player>(reference, p));
 
-            if (HasWinner)
-            {
-                Winner.Wins++;
-            }
-
             var ev = Updated;
 
             if (ev != null)
@@ -84,6 +80,18 @@ namespace NaughtsAndCrosses.Simulator
                     Player = p,
                     ContextData = GridReference(reference)
                 });
+            }
+
+            if (IsComplete)
+            {
+                if (HasWinner)
+                {
+                    Winner.Wins++;
+                }
+
+                var evw = Completed;
+
+                if (evw != null) evw.Invoke(this, EventArgs.Empty);
             }
         }
 

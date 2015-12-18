@@ -19,7 +19,7 @@ namespace NaughtsAndCrosses.Simulator
             if (game == null) throw new InvalidOperationException();
 
             var refs = game.Board.AvailableReferences.ToList();
-            game.Board.SubmitGo(this, refs[rnd.Next(refs.Count)]);
+            game.Board.SubmitGo(this, rand.Select(refs));
         }
     }
 }

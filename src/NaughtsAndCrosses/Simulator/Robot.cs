@@ -6,7 +6,7 @@ namespace NaughtsAndCrosses.Simulator
 {
     public abstract class Robot : Player, ICommand
     {
-        protected readonly Random rnd;
+        protected readonly RandomSelector rand;
         private readonly Timer timer;
         protected Game game;
 
@@ -14,7 +14,7 @@ namespace NaughtsAndCrosses.Simulator
 
         public Robot(int id, string name) : base(id, name)
         {
-            rnd = new Random(DateTime.Now.Millisecond);
+            rand = new RandomSelector();
 
             timer = new Timer(2000);
 
