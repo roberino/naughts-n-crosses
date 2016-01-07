@@ -1,9 +1,9 @@
-﻿<Window x:Class="NaughtsAndCrosses.GameView"
+﻿<Window x:Class="NandC.UI.GameView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NaughtsAndCrosses"
+        xmlns:local="clr-namespace:NandC.UI"
         mc:Ignorable="d"
         Title="X &amp; O" Height="650" Width="500">
     <Grid>

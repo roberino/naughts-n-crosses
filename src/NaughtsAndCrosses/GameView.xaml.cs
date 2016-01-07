@@ -1,7 +1,7 @@
-﻿using NaughtsAndCrosses.Simulator;
+﻿using NandC.UI.Models;
 using System.Windows;
 
-namespace NaughtsAndCrosses
+namespace NandC.UI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

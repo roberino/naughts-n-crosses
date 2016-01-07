@@ -1,12 +1,11 @@
-﻿using NaughtsAndCrosses.Simulator;
+﻿using NandC.Engine.Models;
+using NandC.Engine.Simulator;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace NaughtsAndCrosses
+namespace NandC
 {
     [TestFixture]
     public class Tests
